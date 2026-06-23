@@ -40,8 +40,8 @@ export function Footer() {
             <div className="flex items-center gap-4">
               {[
                 { icon: Linkedin, href: "https://www.linkedin.com/in/shreya-singh-rathore310/", label: "LinkedIn" },
-                { icon: Mail, href: "mailto:shreya.rathore@email.com", label: "Email" },
-                { icon: Github, href: "#", label: "GitHub" },
+                { icon: Mail, href: "mailto:shreyasinghrathore310@gmail.com", label: "Email" },
+                { icon: Github, href: "https://github.com/Shreyasinghrathore", label: "GitHub" },
               ].map((s) => (
                 <motion.a
                   key={s.label}

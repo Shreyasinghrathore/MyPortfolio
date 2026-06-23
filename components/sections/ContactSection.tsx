@@ -37,8 +37,8 @@ export function ContactSection() {
     {
       icon: Mail,
       label: "Email",
-      value: "shreya.rathore@email.com",
-      href: "mailto:shreya.rathore@email.com",
+      value: "shreyasinghrathore310@gmail.com",
+      href: "mailto:shreyasinghrathore310@gmail.com",
       color: "from-violet-600 to-purple-700",
       key: "email",
     },

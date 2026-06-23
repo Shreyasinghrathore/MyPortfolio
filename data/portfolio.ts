@@ -4,7 +4,7 @@ export const portfolioData = {
   company: "CloudNexus",
   tagline: "Building Connections. Creating Opportunities. Driving Growth.",
   location: "Bhopal, Madhya Pradesh, India",
-  email: "shreya.rathore@email.com",
+  email: "shreyasinghrathore310@gmail.com",
   linkedin: "https://www.linkedin.com/in/shreya-singh-rathore310/",
   phone: "+91 XXXXX XXXXX",
 
