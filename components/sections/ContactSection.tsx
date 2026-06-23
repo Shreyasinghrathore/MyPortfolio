@@ -33,35 +33,40 @@ export function ContactSection() {
     
     try {
       // Using Web3Forms - free email service
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          access_key: "YOUR_WEB3FORMS_ACCESS_KEY", // You need to get this from https://web3forms.com
-          name: form.name,
-          email: form.email,
-          message: form.message,
-          subject: `Portfolio Contact from ${form.name}`,
-          from_name: "Portfolio Contact Form",
-          to_email: "shreyasinghrathore310@gmail.com"
-        }),
-      });
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+      
+      if (accessKey) {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: form.name,
+            email: form.email,
+            message: form.message,
+            subject: `Portfolio Contact from ${form.name}`,
+            from_name: "Portfolio Contact Form",
+          }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok && data.success) {
-        toast.success("Message sent successfully! Shreya will get back to you soon.");
-        setForm({ name: "", email: "", message: "" });
-      } else {
-        // Fallback to mailto if Web3Forms fails
-        const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
-        const body = encodeURIComponent(
-          `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-        );
-        window.location.href = `mailto:shreyasinghrathore310@gmail.com?subject=${subject}&body=${body}`;
-        toast.success("Opening your email client...");
-        setForm({ name: "", email: "", message: "" });
+        if (response.ok && data.success) {
+          toast.success("Message sent successfully! Shreya will get back to you soon.");
+          setForm({ name: "", email: "", message: "" });
+          setSending(false);
+          return;
+        }
       }
+      
+      // Fallback to mailto if Web3Forms is not configured or fails
+      const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
+      const body = encodeURIComponent(
+        `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
+      );
+      window.location.href = `mailto:shreyasinghrathore310@gmail.com?subject=${subject}&body=${body}`;
+      toast.success("Opening your email client...");
+      setForm({ name: "", email: "", message: "" });
     } catch (error) {
       // Fallback to mailto on error
       const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
