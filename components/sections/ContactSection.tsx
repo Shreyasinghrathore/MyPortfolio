@@ -24,13 +24,36 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
+    if (!form.name || !form.email || !form.message) {
+      toast.error("Please fill all fields!");
+      return;
+    }
+    
     setSending(true);
-    // Simulate sending - integrate EmailJS or similar here
-    await new Promise((r) => setTimeout(r, 1500));
-    toast.success("Message sent! Shreya will get back to you soon.");
-    setForm({ name: "", email: "", message: "" });
-    setSending(false);
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.mailtoUrl) {
+        // Open default email client with pre-filled content
+        window.location.href = data.mailtoUrl;
+        toast.success("Opening your email client...");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        toast.error(data.error || "Failed to process request");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const contacts = [
