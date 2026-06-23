@@ -32,24 +32,45 @@ export function ContactSection() {
     setSending(true);
     
     try {
-      const response = await fetch("/api/contact", {
+      // Using Web3Forms - free email service
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          access_key: "YOUR_WEB3FORMS_ACCESS_KEY", // You need to get this from https://web3forms.com
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          subject: `Portfolio Contact from ${form.name}`,
+          from_name: "Portfolio Contact Form",
+          to_email: "shreyasinghrathore310@gmail.com"
+        }),
       });
 
       const data = await response.json();
 
-      if (response.ok && data.mailtoUrl) {
-        // Open default email client with pre-filled content
-        window.location.href = data.mailtoUrl;
-        toast.success("Opening your email client...");
+      if (response.ok && data.success) {
+        toast.success("Message sent successfully! Shreya will get back to you soon.");
         setForm({ name: "", email: "", message: "" });
       } else {
-        toast.error(data.error || "Failed to process request");
+        // Fallback to mailto if Web3Forms fails
+        const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
+        const body = encodeURIComponent(
+          `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
+        );
+        window.location.href = `mailto:shreyasinghrathore310@gmail.com?subject=${subject}&body=${body}`;
+        toast.success("Opening your email client...");
+        setForm({ name: "", email: "", message: "" });
       }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      // Fallback to mailto on error
+      const subject = encodeURIComponent(`Portfolio Contact from ${form.name}`);
+      const body = encodeURIComponent(
+        `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
+      );
+      window.location.href = `mailto:shreyasinghrathore310@gmail.com?subject=${subject}&body=${body}`;
+      toast.success("Opening your email client...");
+      setForm({ name: "", email: "", message: "" });
       console.error(error);
     } finally {
       setSending(false);
