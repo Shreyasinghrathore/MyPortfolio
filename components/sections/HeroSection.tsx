@@ -257,7 +257,7 @@ export function HeroSection() {
               >
                 <div className="w-full h-full relative">
                   <Image
-                    src="/shreya-profile.png"
+                    src="/Sherya-profile.jpeg"
                     alt="Shreya Rathore"
                     fill
                     className="object-cover"
